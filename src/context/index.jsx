@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export const GlobalContext = createContext(null);
 
@@ -13,7 +14,7 @@ function GlobalState({ children }) {
     setLoading(true);
     try {
       const res = await fetch(
-        `https://dummyjson.com/products?limit=10&skip=${skip*10}`
+        `https://dummyjson.com/products?limit=10&skip=${skip * 10}`
       );
       const data = await res.json();
       setProducts(data.products);
@@ -51,7 +52,9 @@ function GlobalState({ children }) {
       const productToAdd = products.find((product) => product.id === productId);
       const product = { ...productToAdd, quantity: 1 };
       setCartItem([...cartItem, product]);
-    }  };
+    }
+    toast.success("Product added to cart");
+  };
 
   const incrementQuantity = (productId) => {
     cartItem.map((product) => {
@@ -60,15 +63,24 @@ function GlobalState({ children }) {
       }
     });
     setCartItem([...cartItem]);
+    toast.success("Quantity updated");
   };
 
   const decrementQuantity = (productId) => {
+    let InitialLength = cartItem.length;
     cartItem.map((product) => {
       if (product.id === productId) {
         product.quantity -= 1;
+        if (product.quantity === 0) {
+          InitialLength -= 1;
+          }
       }
     });
-
+    if (InitialLength !== cartItem.length) {
+      toast.success("Product removed from cart");
+    }else{
+      toast.success("Quantity updated");
+    }
     setCartItem(cartItem.filter((product) => product.quantity > 0));
   };
 
@@ -80,15 +92,26 @@ function GlobalState({ children }) {
     if (skip + value < 0) return;
     if (skip + value > 15) return;
     setSkip(skip + value);
-  }
-  
+  };
+
   useEffect(() => {
     fetchProducts();
   }, [skip]);
 
   return (
     <GlobalContext.Provider
-      value={{ products, loading, currentProduct, skip, fetchNextBatch, getProductById, addToCart, cartItem, incrementQuantity, decrementQuantity }}
+      value={{
+        products,
+        loading,
+        currentProduct,
+        skip,
+        fetchNextBatch,
+        getProductById,
+        addToCart,
+        cartItem,
+        incrementQuantity,
+        decrementQuantity,
+      }}
     >
       {children}
     </GlobalContext.Provider>

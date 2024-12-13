@@ -3,11 +3,11 @@ import CartSingleItem from "../components/CartSingleItem";
 import { GlobalContext } from "../context";
 import { useNavigate } from "react-router-dom";
 import PurchaseCard from "../components/PurchaseCard";
+import { Toaster } from "react-hot-toast";
 
 const CartPage = () => {
   const navigate = useNavigate();
   const { cartItem } = useContext(GlobalContext);
-  // console.log("cartItem : ", cartItem);
   return (
     <div className="flex flex-col w-full">
       {cartItem.length > 0 ? (
@@ -40,6 +40,7 @@ const CartPage = () => {
           </div>
         </div>
       )}
+      <Toaster />
     </div>
   );
 };

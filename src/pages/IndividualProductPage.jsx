@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../context";
 import { useParams } from "react-router-dom";
 import ReviewCard from "../components/ReviewCard";
+import { Toaster } from "react-hot-toast";
 
 const IndividualProductPage = () => {
   const { getProductById, currentProduct, loading, addToCart } = useContext(GlobalContext);
@@ -81,6 +82,7 @@ const IndividualProductPage = () => {
         ))}
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };
